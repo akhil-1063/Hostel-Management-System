@@ -11,7 +11,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
     try {
 
         // Checking for exisitng User
-        const { name, email, password, mobileno, role } = req.body;
+        const { name, email, password, role,phone,emergencyContactName,emergencyContactPhone,address } = req.body;
 
         const exisitingUser = await User.findOne({ email });
 
@@ -22,7 +22,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
 
         //Creating the New User
 
-        const newUser = await User.create({ name, email, password, mobileno, role });
+        const newUser = await User.create({ name, email, password,phone, role,emergencyContactName,emergencyContactPhone,address });
         console.log("New user registered Successfully");
         res.status(201).json({ message: "user registered successfully", user: newUser });
 

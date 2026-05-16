@@ -39,12 +39,12 @@ export const getAllTickets = async (req: AuthRequest, res: Response): Promise<vo
 export const updateTicketStatus = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
         const { id } = req.params; // Get the ticket ID from the URL (e.g., /api/maintenance/654b1...)
-        const { status } = req.body; // Expecting 'pending', 'in-progress', or 'resolved'
+        const { status,assignedStaff } = req.body; // Expecting 'pending', 'in-progress', or 'resolved'
 
         // Mongoose Superpower: Find the ticket by ID and update it instantly
         const updatedTicket = await Maintenance.findByIdAndUpdate(
             id, 
-            { status }, 
+            { status,assignedStaff},
             { new: true } // This tells Mongoose to return the NEW updated data, not the old data
         );
 

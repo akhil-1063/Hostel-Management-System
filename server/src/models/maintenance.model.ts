@@ -31,7 +31,20 @@ const maintenanceSchema = new Schema(
             type: String,
             enum: ['pending', 'in-progress', 'resolved'],
             default: 'pending' // Starts as pending when the resident submits it
-        }
+        },
+
+
+
+        assignedStaff: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            default: null
+
+
+
+
+        },
+       
     },
     { timestamps: true }
 );

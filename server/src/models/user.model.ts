@@ -21,9 +21,22 @@ const userSchema = new mongoose.Schema(
             enum: ['resident', 'admin', 'staff'],
             default: 'resident'
         }, 
-        mobileno : {
-            type :String,
-            required : true
+        
+         phone: { 
+            type: String, 
+            required: true 
+        },
+        emergencyContactName: { 
+            type: String, 
+            required: true 
+        },
+        emergencyContactPhone: { 
+            type: String, 
+            required: true 
+        },
+        address: { 
+            type: String, 
+            required: true 
         }
     },
     { timestamps: true },
