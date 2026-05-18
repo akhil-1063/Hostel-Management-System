@@ -6,7 +6,8 @@ import roomRouter from "./routes/room.routes";
 import bookingRouter from "./routes/booking.routes"; 
 import maintenanceRouter from "./routes/maintenance.routes";
 import invoiceRouter from "./routes/invoice.routes";
-
+import notificationRouter from "./routes/notification.routes";
+import dashboardRouter from "./routes/dashboard.routes";
 
 const app =express() ;
 app.use(express.json());
@@ -15,6 +16,8 @@ app.use("/api/rooms",roomRouter);
 app.use("/api/bookings",bookingRouter);
 app.use("/api/maintenance",maintenanceRouter);
 app.use("/api/invoices",invoiceRouter);
+app.use("/api/notifications",notificationRouter);
+app.use("/api/dashboard",dashboardRouter);
 
 
  (async ()=>{
