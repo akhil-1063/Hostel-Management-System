@@ -5,6 +5,7 @@ import authRouter from "./routes/auth.routes";
 import roomRouter from "./routes/room.routes";
 import bookingRouter from "./routes/booking.routes"; 
 import maintenanceRouter from "./routes/maintenance.routes";
+import invoiceRouter from "./routes/invoice.routes";
 
 
 const app =express() ;
@@ -13,6 +14,7 @@ app.use("/api/auth",authRouter);
 app.use("/api/rooms",roomRouter);
 app.use("/api/bookings",bookingRouter);
 app.use("/api/maintenance",maintenanceRouter);
+app.use("/api/invoices",invoiceRouter);
 
 
  (async ()=>{
