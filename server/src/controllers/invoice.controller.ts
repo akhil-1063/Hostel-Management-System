@@ -1,6 +1,9 @@
 import { Response } from 'express';
 import { AuthRequest } from '../middlewares/auth.middleware';
 import Invoice from '../models/invoice.model';
+import Notification from '../models/notification.model';
+import User from '../models/user.model';
+import { sendEmail } from '../utils/email';
 import Razorpay from 'razorpay';
 import crypto from 'crypto';
 
@@ -21,6 +24,27 @@ export const generateInvoice = async (req: AuthRequest, res: Response): Promise<
         const newInvoice = await Invoice.create({
             user, room, billingMonth, roomFee, utilities, additionalServices, discount, lateFee, totalAmount
         });
+
+        // --- NEW NOTIFICATION LOGIC ---
+        const resident = await User.findById(user);
+        
+        // 1. In-App Notification
+        await Notification.create({
+            user,
+            title: "New Invoice Generated",
+            message: `Your rent bill for ${billingMonth} is ready. Total Amount: ₹${totalAmount}`,
+            type: 'billing'
+        });
+
+        // 2. Email Notification
+        if (resident) {
+            await sendEmail(
+                resident.email, 
+                "Hostel Bill Generated", 
+                `Hello ${resident.name},\n\nYour hostel bill for ${billingMonth} has been generated.\nTotal Amount: ₹${totalAmount}.\nPlease log in to the portal to pay.`
+            );
+        }
+        // ------------------------------
 
         res.status(201).json({ message: "Invoice generated successfully", invoice: newInvoice });
     } catch (error) {

@@ -1,6 +1,9 @@
 import { Response } from 'express';
 import { AuthRequest } from '../middlewares/auth.middleware';
 import Maintenance from '../models/maintenance.model';
+import Notification from '../models/notification.model';
+import User from '../models/user.model';
+import { sendEmail } from '../utils/email';
 
 // 1. Submit a complaint (Residents)
 export const createTicket = async (req: AuthRequest, res: Response): Promise<void> => {
@@ -52,6 +55,29 @@ export const updateTicketStatus = async (req: AuthRequest, res: Response): Promi
             res.status(404).json({ message: "Ticket not found" });
             return;
         }
+
+        // --- NEW NOTIFICATION LOGIC ---
+        if (status === 'resolved') {
+            const resident = await User.findById(updatedTicket.user);
+            
+            // 1. In-App Notification
+            await Notification.create({
+                user: updatedTicket.user,
+                title: "Ticket Resolved!",
+                message: `Your maintenance ticket for issue: "${updatedTicket.issueDescription}" has been resolved.`,
+                type: 'maintenance'
+            });
+
+            // 2. Email Notification
+            if (resident) {
+                await sendEmail(
+                    resident.email, 
+                    "Maintenance Ticket Resolved", 
+                    `Good news! Your hostel maintenance issue (${updatedTicket.issueDescription}) is fixed.`
+                );
+            }
+        }
+        // ------------------------------
 
         res.status(200).json({ message: "Ticket updated!", ticket: updatedTicket });
     } catch (error) {
